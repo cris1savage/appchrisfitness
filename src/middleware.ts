@@ -40,7 +40,8 @@ export async function middleware(request: NextRequest) {
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
+    // el destino real (dashboard vs mi-entrenamiento) se decide en /post-login
+    url.pathname = '/post-login';
     return NextResponse.redirect(url);
   }
 

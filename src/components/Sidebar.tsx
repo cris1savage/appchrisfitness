@@ -8,7 +8,9 @@ const links = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/clientes', label: 'Clientes' },
   { href: '/entrenamiento', label: 'Entrenamiento' },
+  { href: '/ejercicios', label: 'Biblioteca ejercicios' },
   { href: '/nutricion', label: 'Nutrición' },
+  { href: '/alimentos', label: 'Alimentos' },
   { href: '/check-ins', label: 'Check-ins' },
 ];
 

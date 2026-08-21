@@ -52,7 +52,7 @@ export default function InvitationPage() {
       return;
     }
 
-    router.push('/dashboard');
+    router.push('/mi-entrenamiento');
   }
 
   return (

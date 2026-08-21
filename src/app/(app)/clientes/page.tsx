@@ -29,6 +29,7 @@ export default async function ClientesPage() {
               <th className="px-5 py-3 font-normal">Objetivo</th>
               <th className="px-5 py-3 font-normal">Estado</th>
               <th className="px-5 py-3 font-normal">Desde</th>
+              <th className="px-5 py-3 font-normal">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -43,6 +44,19 @@ export default async function ClientesPage() {
                 <td className="px-5 py-3 text-muted capitalize">{client.status}</td>
                 <td className="px-5 py-3 text-muted">
                   {new Date(client.start_date).toLocaleDateString('es-ES')}
+                </td>
+                <td className="px-5 py-3">
+                  <div className="flex gap-3 text-xs">
+                    <Link href={`/entrenamiento/${client.id}`} className="text-cyan hover:underline">
+                      Entreno
+                    </Link>
+                    <Link href={`/nutricion/${client.id}`} className="text-cyan hover:underline">
+                      Nutrición
+                    </Link>
+                    <Link href={`/clientes/${client.id}/progreso`} className="text-cyan hover:underline">
+                      Progreso
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}
