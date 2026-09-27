@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { StatCard } from '@/components/StatCard';
 
 export default async function DashboardPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [{ count: activeClients }, { count: pendingCheckins }, { data: recentClients }] =
     await Promise.all([

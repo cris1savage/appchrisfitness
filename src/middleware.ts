@@ -29,8 +29,11 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/login');
-  const isPublicRoute = isAuthRoute || request.nextUrl.pathname.startsWith('/auth');
+  const { pathname } = request.nextUrl;
+  const isAuthRoute = pathname.startsWith('/login');
+  // Rutas accesibles sin sesión: la invitación la abre alguien que aún no tiene cuenta
+  const PUBLIC_PREFIXES = ['/login', '/auth', '/invitacion', '/recuperar', '/privacidad'];
+  const isPublicRoute = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
@@ -49,5 +52,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.svg$).*)'],
+  // Excluye estáticos, iconos y el manifest de la PWA (deben cargarse sin sesión)
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)'],
 };

@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { NewBlockForm } from './NewBlockForm';
 
-export default async function ClientTrainingPage({ params }: { params: { clientId: string } }) {
-  const supabase = createClient();
+export default async function ClientTrainingPage({ params: paramsPromise }: { params: Promise<{ clientId: string }> }) {
+  const params = await paramsPromise;
+  const supabase = await createClient();
 
   const [{ data: client }, { data: blocks }] = await Promise.all([
     supabase.from('clients').select('full_name').eq('id', params.clientId).single(),

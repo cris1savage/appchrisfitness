@@ -1,10 +1,14 @@
 'use server';
 
+import { getMyClientId } from '@/lib/getMyClientId';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function logExercise(trainingExerciseId: string, clientId: string, formData: FormData) {
-  const supabase = createClient();
+  // No fiarse del clientId que llega del navegador: debe ser el del usuario con sesión
+  if ((await getMyClientId()) !== clientId) return { error: 'No autorizado.' };
+
+  const supabase = await createClient();
 
   const weight = Number(formData.get('weight') ?? 0) || null;
   const reps = Number(formData.get('reps') ?? 0) || null;

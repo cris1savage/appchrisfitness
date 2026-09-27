@@ -14,3 +14,6 @@ export function parseLocalDate(iso: string) {
 export function toIsoDate(y: number, monthIndex: number, d: number) {
   return `${y}-${String(monthIndex + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
+
+/** Orden de JavaScript getDay() y de day_of_week en la base de datos (0 = domingo) */
+export const DIAS_DOMINGO_PRIMERO = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];

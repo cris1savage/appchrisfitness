@@ -6,7 +6,7 @@ const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', '
 
 export default async function MiCheckinPage() {
   const clientId = await getMyClientId();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!clientId) {
     return <p className="text-center text-muted">No se ha podido identificar tu cuenta de cliente.</p>;

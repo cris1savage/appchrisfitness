@@ -6,12 +6,16 @@ App en **Expo SDK 57** (React Native 0.86, React 19.2). Un solo código para iOS
 
 ```bash
 cd mobile
+cp .env.example .env     # y rellena los valores (los mismos de Supabase que usa la web)
 npm install
 npx expo start
 ```
 
-Escanea el QR con **Expo Go** (Android) o con la cámara (iPhone).
-Usuarios de prueba: `chris@chrisfitness.com` / `1234` (coach) · `carlos@test.com` / `1234` (cliente).
+Escanea el QR con **Expo Go** (Android) o con la cámara (iPhone) y entra con tu usuario real de la web.
+
+- **Clientes**: inicio, entrenamiento (registrar series), nutrición (elegir opciones), progreso (peso y fotos), check-ins.
+- **Coach**: clientes (peso y check-ins de cada uno), últimas respuestas de check-in, biblioteca de ejercicios.
+  Crear rutinas, planes y clientes se hace desde el panel web.
 
 ## Antes de subir cambios
 
@@ -26,19 +30,4 @@ npx expo-doctor     # versiones de dependencias compatibles
 
 ## Publicar en App Store / Google Play
 
-```bash
-npm i -g eas-cli
-eas login
-eas build --platform android --profile preview   # APK para probar
-eas build --platform all --profile production    # builds para las tiendas
-eas submit --platform all
-```
-
-Necesitas cuenta de Apple Developer (99 $/año) y de Google Play Console (25 $ una vez).
-Los iconos de `assets/` son provisionales (1024×1024): sustitúyelos por el logo definitivo.
-
-## Pendiente
-
-- Los datos son de prueba (`src/data/mockData.ts`). Siguiente paso: conectar con el mismo
-  **Supabase** que usa la web (`../src`), para que coach y clientes compartan datos reales.
-  Los puntos a cambiar están marcados con `TODO` (login, check-in, calendario).
+Sigue la sección 3 de [`../LANZAMIENTO.md`](../LANZAMIENTO.md).

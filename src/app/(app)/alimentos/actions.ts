@@ -1,10 +1,14 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function createFood(formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const name = String(formData.get('name') ?? '').trim();
   const kcal_per_100 = Number(formData.get('kcal_per_100') ?? 0);
@@ -31,7 +35,10 @@ export async function createFood(formData: FormData) {
 }
 
 export async function deleteFood(id: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('foods_library').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath('/alimentos');

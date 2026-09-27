@@ -11,14 +11,13 @@ import NutricionScreen from '../screens/cliente/NutricionScreen';
 import ProgresoScreen from '../screens/cliente/ProgresoScreen';
 import PerfilScreen from '../screens/cliente/PerfilScreen';
 
-import CoachDashboard from '../screens/coach/CoachDashboard';
-import CalendarioScreen from '../screens/coach/CalendarioScreen';
-import RutinasScreen from '../screens/coach/RutinasScreen';
+import ClientesScreen from '../screens/coach/ClientesScreen';
+import CheckinsScreen from '../screens/coach/CheckinsScreen';
 import EjerciciosScreen from '../screens/coach/EjerciciosScreen';
 
 export type ClienteTabsParams = {
   Inicio: undefined;
-  Entreno: { rutinaId?: string; ts?: number } | undefined;
+  Entreno: undefined;
   'Nutrición': undefined;
   Progreso: undefined;
   Perfil: { abrirCheckin?: boolean; ts?: number } | undefined;
@@ -58,13 +57,12 @@ function CoachTabs() {
       tabBarStyle:{borderTopColor:Colors.border,backgroundColor:Colors.card},
       tabBarLabelStyle:{fontSize:11,fontWeight:'500'},
       tabBarIcon:({color,size})=>{
-        const icons:Record<string,keyof typeof Ionicons.glyphMap>={Clientes:'people-outline',Calendario:'calendar-outline',Rutinas:'create-outline',Ejercicios:'barbell-outline'};
+        const icons:Record<string,keyof typeof Ionicons.glyphMap>={Clientes:'people-outline','Check-ins':'clipboard-outline',Ejercicios:'barbell-outline'};
         return <Ionicons name={icons[route.name]} size={size} color={color}/>;
       },
     })}>
-      <CoachTab.Screen name="Clientes" component={CoachDashboard}/>
-      <CoachTab.Screen name="Calendario" component={CalendarioScreen}/>
-      <CoachTab.Screen name="Rutinas" component={RutinasScreen}/>
+      <CoachTab.Screen name="Clientes" component={ClientesScreen}/>
+      <CoachTab.Screen name="Check-ins" component={CheckinsScreen}/>
       <CoachTab.Screen name="Ejercicios" component={EjerciciosScreen}/>
     </CoachTab.Navigator>
   );

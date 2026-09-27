@@ -3,11 +3,12 @@ import { createClient } from '@/lib/supabase/server';
 import { DayColumn } from './DayColumn';
 
 export default async function BlockDetailPage({
-  params,
+  params: paramsPromise,
 }: {
-  params: { clientId: string; blockId: string };
+  params: Promise<{ clientId: string; blockId: string }>;
 }) {
-  const supabase = createClient();
+  const params = await paramsPromise;
+  const supabase = await createClient();
 
   const [{ data: block }, { data: days }, { data: exerciseLibrary }] = await Promise.all([
     supabase.from('training_blocks').select('name, client_id').eq('id', params.blockId).single(),

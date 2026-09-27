@@ -33,6 +33,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#F2F2F7"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Chris Fitness necesita acceder a tus fotos para que subas fotos de progreso que solo verá tu entrenador.",
+          "cameraPermission": "Chris Fitness necesita la cámara para que hagas fotos de progreso que solo verá tu entrenador.",
+          "microphonePermission": false
+        }
       ]
     ]
   }

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 
 export default async function NutricionPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: clients } = await supabase.from('clients').select('id, full_name, status').order('full_name');
 

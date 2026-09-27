@@ -1,10 +1,14 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function createExercise(formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const name = String(formData.get('name') ?? '').trim();
   const video_url = String(formData.get('video_url') ?? '').trim();
@@ -29,7 +33,10 @@ export async function createExercise(formData: FormData) {
 }
 
 export async function deleteExercise(id: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('exercises_library').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath('/ejercicios');

@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityInd
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { Colors, FontSize, Spacing, Radius } from '../constants/theme';
+import { openLink } from '../utils/openLink';
+import { WEB_URL } from '../config';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -36,7 +38,12 @@ export default function LoginScreen() {
               {loading?<ActivityIndicator color="#fff"/>:<Text style={s.btnTxt}>Entrar</Text>}
             </TouchableOpacity>
           </View>
-          {__DEV__&&<Text style={s.hint}>Coach: chris@chrisfitness.com / 1234{'\n'}Cliente: carlos@test.com / 1234</Text>}
+          {WEB_URL?(
+            <TouchableOpacity onPress={()=>openLink(`${WEB_URL}/recuperar`)} hitSlop={8}>
+              <Text style={s.hint}>¿Has olvidado tu contraseña?</Text>
+            </TouchableOpacity>
+          ):null}
+          <Text style={[s.hint,{marginTop:Spacing.md}]}>¿Aún no tienes cuenta? Actívala desde el enlace de invitación que te envía Chris.</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -56,5 +63,5 @@ const s = StyleSheet.create({
   input:{backgroundColor:Colors.background,borderRadius:Radius.md,padding:Spacing.md,fontSize:FontSize.md,color:Colors.text,borderWidth:1,borderColor:Colors.border},
   btn:{backgroundColor:Colors.primary,borderRadius:Radius.md,padding:Spacing.md,alignItems:'center',marginTop:Spacing.lg},
   btnTxt:{color:'#fff',fontSize:FontSize.md,fontWeight:'600'},
-  hint:{textAlign:'center',fontSize:FontSize.xs,color:Colors.textLight,lineHeight:18},
+  hint:{textAlign:'center',fontSize:FontSize.sm,color:Colors.textSecondary,lineHeight:18},
 });

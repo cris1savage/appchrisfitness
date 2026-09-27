@@ -1,8 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { USUARIOS } from '../data/mockData';
+import * as api from '../lib/api';
 
-export type User = { id: string; nombre: string; email: string; rol: 'coach' | 'cliente' };
+export type User = api.SessionUser;
 
 type AuthCtx = {
   user: User | null;
@@ -13,42 +12,49 @@ type AuthCtx = {
   isCoach: boolean;
 };
 
-const STORAGE_KEY = 'cf.session.v1';
 const AuthContext = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [restoring, setRestoring] = useState(true);
 
-  // Restaurar sesión guardada (si falla, simplemente se pide login de nuevo)
+  // Restaurar sesión (Supabase la guarda en el móvil). Sin conexión: se pide login de nuevo.
   useEffect(() => {
     let cancelled = false;
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then(raw => {
-        if (!cancelled && raw) setUser(JSON.parse(raw) as User);
-      })
-      .catch(() => AsyncStorage.removeItem(STORAGE_KEY).catch(() => {}))
-      .finally(() => { if (!cancelled) setRestoring(false); });
-    return () => { cancelled = true; };
+    (async () => {
+      try {
+        if (await api.getSessionUserId()) {
+          const u = await api.loadSessionUser();
+          if (!cancelled) setUser(u);
+        }
+      } catch {
+        // sesión caducada o sin red
+      } finally {
+        if (!cancelled) setRestoring(false);
+      }
+    })();
+    const unsubscribe = api.onSignedOut(() => setUser(null));
+    return () => { cancelled = true; unsubscribe(); };
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    // TODO: sustituir por supabase.auth.signInWithPassword cuando se conecte el backend
-    await new Promise(r => setTimeout(r, 400));
-    const u = USUARIOS.find(x => x.email === email.toLowerCase().trim() && x.password === password);
-    if (!u) throw new Error('Email o contraseña incorrectos');
-    const next: User = { id: u.id, nombre: u.nombre, email: u.email, rol: u.rol };
-    setUser(next);
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
+    await api.signIn(email, password);
+    const u = await api.loadSessionUser();
+    if (!u) throw new Error('No se pudo cargar tu perfil');
+    if (u.role === 'client' && !u.clientId) {
+      await api.signOut();
+      throw new Error('Tu cuenta no está vinculada a ningún cliente. Habla con Chris.');
+    }
+    setUser(u);
   }, []);
 
   const logout = useCallback(async () => {
     setUser(null);
-    await AsyncStorage.removeItem(STORAGE_KEY).catch(() => {});
+    await api.signOut().catch(() => {});
   }, []);
 
   const value = useMemo(
-    () => ({ user, restoring, login, logout, isCoach: user?.rol === 'coach' }),
+    () => ({ user, restoring, login, logout, isCoach: user?.role === 'admin' }),
     [user, restoring, login, logout],
   );
 
@@ -59,4 +65,10 @@ export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth debe usarse dentro de <AuthProvider>');
   return ctx;
+}
+
+/** Para pantallas de cliente: el id de cliente siempre existe (login lo garantiza) */
+export function useClientId() {
+  const { user } = useAuth();
+  return user?.clientId ?? '';
 }

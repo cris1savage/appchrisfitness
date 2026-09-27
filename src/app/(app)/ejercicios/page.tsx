@@ -3,7 +3,7 @@ import { ExerciseForm } from './ExerciseForm';
 import { DeleteExerciseButton } from './DeleteExerciseButton';
 
 export default async function EjerciciosPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: exercises } = await supabase
     .from('exercises_library')

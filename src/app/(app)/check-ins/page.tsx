@@ -7,7 +7,7 @@ import { ScheduleList } from './ScheduleList';
 const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
 export default async function CheckinsPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [{ data: templates }, { data: clients }, { data: schedules }, { data: responses }] =
     await Promise.all([
