@@ -9,7 +9,8 @@
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://xzkixopbsxapihaoabwz.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ZhCf0_IALqiIUlCDWrW8rg_0MRjR6zP"
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ZhCf0_IALqiIUlCDWrW8rg_0MRjR6zP",
+        "EXPO_PUBLIC_WEB_URL": "https://appchrisfitness.vercel.app"
       }
     },
     "preview": {
@@ -19,14 +20,16 @@
       },
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://xzkixopbsxapihaoabwz.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ZhCf0_IALqiIUlCDWrW8rg_0MRjR6zP"
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ZhCf0_IALqiIUlCDWrW8rg_0MRjR6zP",
+        "EXPO_PUBLIC_WEB_URL": "https://appchrisfitness.vercel.app"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://xzkixopbsxapihaoabwz.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ZhCf0_IALqiIUlCDWrW8rg_0MRjR6zP"
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ZhCf0_IALqiIUlCDWrW8rg_0MRjR6zP",
+        "EXPO_PUBLIC_WEB_URL": "https://appchrisfitness.vercel.app"
       }
     }
   },
