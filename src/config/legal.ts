@@ -7,6 +7,6 @@ export const LEGAL = {
   ownerName: '[PENDIENTE: nombre y apellidos o razón social]',
   taxId: '[PENDIENTE: NIF/CIF]',
   address: '[PENDIENTE: dirección postal]',
-  email: '[PENDIENTE: email de contacto para privacidad]',
+  email: 'chriisfitness@gmail.com',
   lastUpdated: '27 de septiembre de 2026',
 };
