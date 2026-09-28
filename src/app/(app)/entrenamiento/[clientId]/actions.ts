@@ -1,10 +1,14 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function createBlock(clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const name = String(formData.get('name') ?? '').trim();
   const length_days = Number(formData.get('length_days') ?? 0);
@@ -34,7 +38,10 @@ export async function createBlock(clientId: string, formData: FormData) {
 }
 
 export async function renameDay(dayId: string, clientId: string, name: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('training_days').update({ name }).eq('id', dayId);
   if (error) return { error: error.message };
   revalidatePath(`/entrenamiento/${clientId}`);
@@ -42,7 +49,10 @@ export async function renameDay(dayId: string, clientId: string, name: string) {
 }
 
 export async function addExerciseToDay(dayId: string, clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const exercise_id = String(formData.get('exercise_id') ?? '');
   const sets = Number(formData.get('sets') ?? 0) || null;
@@ -76,7 +86,10 @@ export async function addExerciseToDay(dayId: string, clientId: string, formData
 }
 
 export async function removeTrainingExercise(id: string, clientId: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('training_exercises').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath(`/entrenamiento/${clientId}`);

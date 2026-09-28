@@ -13,10 +13,16 @@ export default function InvitationPage() {
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (!consent) {
+      setError('Necesitamos tu consentimiento para tratar tus datos de salud y fotos de progreso.');
+      return;
+    }
 
     if (password !== confirm) {
       setError('Las contraseñas no coinciden.');
@@ -96,6 +102,23 @@ export default function InvitationPage() {
               className="w-full rounded-xl border border-line bg-panel px-4 py-3 text-white outline-none transition-colors focus:border-cyan"
             />
           </div>
+
+          <label className="flex items-start gap-2 text-xs text-muted">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-0.5 accent-cyan"
+            />
+            <span>
+              Consiento que Chris Fitness trate mis datos de salud (peso, check-ins y fotos de progreso) para prestarme el
+              servicio, según la{' '}
+              <a href="/privacidad" target="_blank" className="text-cyan hover:underline">
+                política de privacidad
+              </a>
+              .
+            </span>
+          </label>
 
           {error && (
             <p role="alert" className="text-sm text-risk-high">

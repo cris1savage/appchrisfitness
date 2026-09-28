@@ -1,10 +1,14 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function createClientWithInvitation(formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const full_name = String(formData.get('full_name') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();

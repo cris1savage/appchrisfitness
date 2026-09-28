@@ -1,10 +1,14 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function setWeightGoal(clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const start_weight = Number(formData.get('start_weight') ?? 0);
   const target_weight = Number(formData.get('target_weight') ?? 0);
@@ -35,7 +39,10 @@ export async function setWeightGoal(clientId: string, formData: FormData) {
 }
 
 export async function logWeight(clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const weight = Number(formData.get('weight') ?? 0);
   const logged_at = String(formData.get('logged_at') ?? new Date().toISOString().slice(0, 10));

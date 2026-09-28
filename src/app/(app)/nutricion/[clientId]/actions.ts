@@ -1,10 +1,14 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function createPlan(clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const name = String(formData.get('name') ?? '').trim();
   const target_kcal = Number(formData.get('target_kcal') ?? 0) || null;
@@ -30,7 +34,10 @@ export async function createPlan(clientId: string, formData: FormData) {
 }
 
 export async function addMeal(planId: string, clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const name = String(formData.get('name') ?? '').trim();
   if (!name) return { error: 'Ponle nombre a la comida.' };
 
@@ -48,7 +55,10 @@ export async function addMeal(planId: string, clientId: string, formData: FormDa
 }
 
 export async function addOption(mealId: string, clientId: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const { data: existing } = await supabase.from('meal_options').select('option_number').eq('meal_id', mealId);
   const nextNumber = (existing?.length ?? 0) + 1;
@@ -66,7 +76,10 @@ export async function addOption(mealId: string, clientId: string) {
 }
 
 export async function selectOption(optionId: string, mealId: string, clientId: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   // desmarca las demás opciones de esa comida, marca solo esta
   await supabase.from('meal_options').update({ is_selected: false }).eq('meal_id', mealId);
@@ -78,7 +91,10 @@ export async function selectOption(optionId: string, mealId: string, clientId: s
 }
 
 export async function addFoodToOption(optionId: string, clientId: string, formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const food_id = String(formData.get('food_id') ?? '');
   const quantity_grams = Number(formData.get('quantity_grams') ?? 0);
@@ -97,7 +113,10 @@ export async function addFoodToOption(optionId: string, clientId: string, formDa
 }
 
 export async function removeFoodFromOption(id: string, clientId: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('meal_option_foods').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath(`/nutricion/${clientId}`);

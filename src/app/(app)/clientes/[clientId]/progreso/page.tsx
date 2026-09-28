@@ -5,8 +5,9 @@ import { GoalForm } from './GoalForm';
 import { LogWeightForm } from './LogWeightForm';
 import { PhotoCompare } from './PhotoCompare';
 
-export default async function ProgressPage({ params }: { params: { clientId: string } }) {
-  const supabase = createClient();
+export default async function ProgressPage({ params: paramsPromise }: { params: Promise<{ clientId: string }> }) {
+  const params = await paramsPromise;
+  const supabase = await createClient();
 
   const [{ data: client }, { data: goal }, { data: logs }, { data: photos }] = await Promise.all([
     supabase.from('clients').select('full_name').eq('id', params.clientId).single(),

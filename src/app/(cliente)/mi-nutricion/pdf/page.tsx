@@ -4,7 +4,7 @@ import { PrintButton } from './PrintButton';
 
 export default async function NutricionPdfPage() {
   const clientId = await getMyClientId();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: client } = await supabase.from('clients').select('full_name').eq('id', clientId).single();
 

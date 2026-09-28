@@ -5,7 +5,7 @@ import { UploadPhotoForm } from './UploadPhotoForm';
 
 export default async function MiProgresoPage() {
   const clientId = await getMyClientId();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!clientId) {
     return <p className="text-center text-muted">No se ha podido identificar tu cuenta de cliente.</p>;

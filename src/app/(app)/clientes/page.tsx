@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { NewClientForm } from './NewClientForm';
 
 export default async function ClientesPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: clients } = await supabase
     .from('clients')

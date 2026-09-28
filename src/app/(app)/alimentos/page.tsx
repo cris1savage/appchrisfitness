@@ -3,7 +3,7 @@ import { FoodForm } from './FoodForm';
 import { DeleteFoodButton } from './DeleteFoodButton';
 
 export default async function AlimentosPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: foods } = await supabase
     .from('foods_library')

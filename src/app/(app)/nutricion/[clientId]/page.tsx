@@ -3,8 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { NewPlanForm } from './NewPlanForm';
 import { MealsBoard } from './MealsBoard';
 
-export default async function ClientNutritionPage({ params }: { params: { clientId: string } }) {
-  const supabase = createClient();
+export default async function ClientNutritionPage({ params: paramsPromise }: { params: Promise<{ clientId: string }> }) {
+  const params = await paramsPromise;
+  const supabase = await createClient();
 
   const [{ data: client }, { data: plans }, { data: foods }] = await Promise.all([
     supabase.from('clients').select('full_name').eq('id', params.clientId).single(),

@@ -1,12 +1,16 @@
 'use server';
 
+import { assertAdmin } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export type CheckinQuestion = { id: string; label: string; type: 'text' | 'number' | 'photo' };
 
 export async function createTemplate(formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const name = String(formData.get('name') ?? '').trim();
   const questionsRaw = String(formData.get('questions') ?? '').trim();
@@ -29,7 +33,10 @@ export async function createTemplate(formData: FormData) {
 }
 
 export async function deleteTemplate(id: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('checkin_templates').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath('/check-ins');
@@ -37,7 +44,10 @@ export async function deleteTemplate(id: string) {
 }
 
 export async function scheduleCheckin(formData: FormData) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
 
   const client_id = String(formData.get('client_id') ?? '');
   const template_id = String(formData.get('template_id') ?? '');
@@ -58,7 +68,10 @@ export async function scheduleCheckin(formData: FormData) {
 }
 
 export async function removeSchedule(id: string) {
-  const supabase = createClient();
+  const denied = await assertAdmin();
+  if (denied) return { error: denied.error };
+
+  const supabase = await createClient();
   const { error } = await supabase.from('checkin_schedule').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath('/check-ins');

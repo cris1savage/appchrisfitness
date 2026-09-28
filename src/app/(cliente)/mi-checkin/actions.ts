@@ -1,10 +1,14 @@
 'use server';
 
+import { getMyClientId } from '@/lib/getMyClientId';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export async function submitCheckin(clientId: string, templateId: string, formData: FormData) {
-  const supabase = createClient();
+  // No fiarse del clientId que llega del navegador: debe ser el del usuario con sesión
+  if ((await getMyClientId()) !== clientId) return { error: 'No autorizado.' };
+
+  const supabase = await createClient();
 
   const answers: Record<string, string> = {};
   formData.forEach((value, key) => {
